@@ -89,7 +89,7 @@ leaflet::leaflet(bgcs) |>
   leaflet::addPolygons()
 
 bgcs <- sf::st_read('data/cavm_canada.gpkg') |> 
-  sf::st_transform(4326)
+  sf::st_transform(4326) |> st_make_valid()
 DBI::dbWriteTable(pgCon, value = bgcs, name = DBI::SQL('arctic_bgcs'),
   overwrite = TRUE)
 
