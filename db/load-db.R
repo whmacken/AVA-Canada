@@ -62,33 +62,33 @@ DBI::dbWriteTable(pgCon, name = DBI::SQL('becmaster_zones'), value = zones,
 
 # Write Pub Refs ----------------------------------------------------------
 
-# accessPath <- "data/tbl_BEC_References.accdb"
-# accCon <- dbConnect(odbc::odbc(), .connection_string = 
-#     sprintf("Driver={Microsoft Access Driver (*.mdb, *.accdb)}; DBQ=%s;",
-#       accessPath))
-# references <- DBI::dbReadTable(accCon, name = 'tblBEC_References')
-# names(references)[1] <- 'id'
-# names(references) <- tolower(names(references))
-# DBI::dbAppendTable(pgCon, name = DBI::SQL('becmaster_references'),
-#   value = references)
-# pubs <- data.table::fread('data/AllPublished_LMH_SU.csv')
-# names(pubs) <- c('plot_number', 'site_unit', 'ref_short_name')
-# Encoding(pubs$site_unit)
-# pubs$site_unit <- iconv(pubs$site_unit, "latin1", "UTF-8")
-# DBI::dbWriteTable(pgCon, name = DBI::SQL('becmaster_link_refs_plots'),
-#   value = pubs, overwrite = TRUE)
+accessPath <- "data/tbl_BEC_References.accdb"
+accCon <- dbConnect(odbc::odbc(), .connection_string =
+    sprintf("Driver={Microsoft Access Driver (*.mdb, *.accdb)}; DBQ=%s;",
+      accessPath))
+references <- DBI::dbReadTable(accCon, name = 'tblBEC_References')
+names(references)[1] <- 'id'
+names(references) <- tolower(names(references))
+DBI::dbAppendTable(pgCon, name = DBI::SQL('ava_canada_references'),
+  value = references)
+pubs <- data.table::fread('data/AllPublished_LMH_SU.csv')
+names(pubs) <- c('plot_number', 'site_unit', 'ref_short_name')
+Encoding(pubs$site_unit)
+pubs$site_unit <- iconv(pubs$site_unit, "latin1", "UTF-8")
+DBI::dbWriteTable(pgCon, name = DBI::SQL('ava_canda_link_refs_plots'),
+  value = pubs, overwrite = TRUE)
 
 
 # Add Arctic Regions ------------------------------------------------------
 
-bgcs <- sf::st_read('data/Arctic_BGCs.gpkg') |> 
+bgcs <- sf::st_read('data/cavm_canada.gpkg') |> 
   sf::st_transform(4326) |>  st_zm(bgcs)
 names(bgcs) <- tolower(names(bgcs))
 leaflet::leaflet(bgcs) |> 
   leaflet::addTiles() |> 
   leaflet::addPolygons()
 
-bgcs <- sf::st_read('data/Arctic_BGCs.gpkg') |> 
+bgcs <- sf::st_read('data/cavm_canada.gpkg') |> 
   sf::st_transform(4326)
 DBI::dbWriteTable(pgCon, value = bgcs, name = DBI::SQL('arctic_bgcs'),
   overwrite = TRUE)
