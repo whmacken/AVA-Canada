@@ -171,4 +171,4 @@ locationAccuracy <- c(
   '<1000m' = ' <= 1000',
   '>1000m' = ' > 1000'
 )
-bgcs <- sf::st_read(con, layer = 'arctic_bgcs.gpkg')
+bgcs <- sf::st_read(con, layer = 'cavm_canada.gpkg')
