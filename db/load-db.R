@@ -1,7 +1,7 @@
 # Setup -------------------------------------------------------------------
 ##adds data from a VPro db to a postgres db created in init-db.R
 library(DBI)
-require(sf)
+library(sf)
 # create an R script with read/write privileged credentials:
 # username <- ""
 # password <- ""
@@ -75,7 +75,7 @@ pubs <- data.table::fread('data/AllPublished_LMH_SU.csv')
 names(pubs) <- c('plot_number', 'site_unit', 'ref_short_name')
 Encoding(pubs$site_unit)
 pubs$site_unit <- iconv(pubs$site_unit, "latin1", "UTF-8")
-DBI::dbWriteTable(pgCon, name = DBI::SQL('ava_canda_link_refs_plots'),
+DBI::dbWriteTable(pgCon, name = DBI::SQL('ava_canada_link_refs_plots'),
   value = pubs, overwrite = TRUE)
 
 
@@ -87,16 +87,13 @@ names(bgcs) <- tolower(names(bgcs))
 leaflet::leaflet(bgcs) |> 
   leaflet::addTiles() |> 
   leaflet::addPolygons()
-
-bgcs <- sf::st_read('data/cavm_canada.gpkg') |> 
-  sf::st_transform(4326) |> st_make_valid()
 DBI::dbWriteTable(pgCon, value = bgcs, name = DBI::SQL('arctic_bgcs'),
   overwrite = TRUE)
 
 # Grant Privileges --------------------------------------------------------
 
-DBI::dbExecute(pgCon, 
-  'GRANT SELECT ON ALL TABLES IN SCHEMA public to becmaster_reader')
+# DBI::dbExecute(pgCon, 
+#   'GRANT SELECT ON ALL TABLES IN SCHEMA public to becmaster_reader')
 
 # Fin ---------------------------------------------------------------------
 
