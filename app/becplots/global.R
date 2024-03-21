@@ -4,8 +4,16 @@ library(mapboxer)
 library(DBI) 
 source("../../creds.R")
 # options(shiny.maxRequestSize = 60 * 1024 ^ 2)
-con <-  DBI::dbConnect(drv = RPostgres::Postgres(), dbname = 'ava_canada', 
-  host = Sys.getenv('PG_SM_HOST'), user = username, password = password)
+isShinyApps <- TRUE
+
+if (isTRUE(isShinyApps)) {
+  con <- DBI::dbConnect(RSQLite::SQLite(), 'ava_canada.gpkg')
+} else {
+  con <-  DBI::dbConnect(drv = RPostgres::Postgres(), dbname = 'ava_canada', 
+    host = Sys.getenv('PG_SM_HOST'), user = username, password = password)
+}
+
+
 bcgov_primary <- function() {
   c('#003366', '#fcba19', '#4c81af')
 }
@@ -116,10 +124,10 @@ regions <- c(
 )
 zones <- DBI::dbGetQuery(con, 
   statement = 'SELECT DISTINCT zone
-  FROM public.becmaster_zones order by zone')[['zone']]
+  FROM becmaster_zones order by zone')[['zone']]
 subzones <- DBI::dbGetQuery(con, 
   statement = 'SELECT DISTINCT zone, bgc
-  FROM public.becmaster_zones order by zone, bgc')
+  FROM becmaster_zones order by zone, bgc')
 subzones <- split(subzones$bgc, subzones$zone)
 # dateRange <- DBI::dbGetQuery(con,
 #   'select date(min(date)) as min_date, date(max(date)) as max_date 
