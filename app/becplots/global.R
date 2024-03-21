@@ -2,7 +2,7 @@ library(shiny)
 library(mapboxer)
 #username = "becmaster_reader"; password = "BECdata"
 library(DBI) 
-source("creds.R")
+source("../../creds.R")
 # options(shiny.maxRequestSize = 60 * 1024 ^ 2)
 con <-  DBI::dbConnect(drv = RPostgres::Postgres(), dbname = 'ava_canada', 
   host = Sys.getenv('PG_SM_HOST'), user = username, password = password)
@@ -26,6 +26,9 @@ bcgov_semantic_colors <- function() {
 }
 zissou <- function() {
   c('#3b99b1', '#56b29e', '#9fc095', '#eacb2b', '#e8a419', '#e87700', '#f5191c')
+}
+observable6 <- function() {
+  c('#4469cc', '#ecb237', '#f97761', '#75c4b0', '#4ba757', '#f98eb6')
 }
 bcgov_theme <- bslib::bs_add_rules(
   bslib::bs_theme(version = 5, bootswatch = 'simplex',
@@ -171,4 +174,5 @@ locationAccuracy <- c(
   '<1000m' = ' <= 1000',
   '>1000m' = ' > 1000'
 )
-#bgcs <- sf::st_read(con, layer = 'cavm_canada.gpkg')
+bgcs <- sf::st_read(con, layer = 'arctic_bgcs')
+provinces <- sf::st_read(con, layer = 'canada_provinces')

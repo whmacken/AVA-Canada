@@ -13,129 +13,129 @@ fluidPage(
       shiny::tags$img(src='gov_bc_logo.svg', height = 35)
       
     ),
-    # shiny::column(width = 3,
-    #   card(title = NULL,
-    #     style = 'margin-top: .5rem;',
-    #     shiny::tags$p(
-    #       'Use this page to extract plot data from the AVA-Canada. Please begin by selecting plots by area, CAVM subzone or project. This selection can then be filtered to return only plots that match selected criteria. After entering your selection click “Apply” to see the number and location of plots in the right hand pane.'),
-    #     shiny::uiOutput('lastUpdate')
-    #   ),
-    #   shiny::uiOutput('instructions'),
-    #   card(title = 'Select Plots', style = 'margin-top: .5rem;',
-    #       shiny::fluidRow(
-    #         shiny::column(width = 3,
-    #           shiny::selectizeInput(inputId = 'selectRegion', 
-    #             label = 'Select Region', multiple = TRUE,
-    #             #selectize = FALSE, size = 2,
-    #             choices = regions) |> small_selectize()
-    #         ),
-    #         shiny::column(width = 3,
-    #           shiny::selectizeInput(inputId = 'selectZone', 
-    #             label = 'Select Zone', multiple = TRUE,
-    #             choices = zones) |> small_selectize()
-    #             ),
-    #         shiny::column(width = 3,
-    #           shiny::selectInput(inputId = 'selectSubzone', 
-    #             label = 'Select Subzone', multiple = TRUE,
-    #             choices = c('')) |> 
-    #             small_selectize()
-    #           )
-    #         ),
-    #       # shiny::fluidRow(
-    #       #   shiny::column(width = 4,
-    #       #     shiny::selectizeInput(inputId = 'selectProjectId', 
-    #       #       multiple = TRUE,
-    #       #       label = 'Select Projects', choices = projectIds$project_id) |> 
-    #       #       small_selectize()
-    #       #     ),
-    #       #     shiny::column(width = 4,
-    #       #       shiny::selectizeInput(inputId = 'selectPublicationId', 
-    #       #         multiple = TRUE,
-    #       #         label = 'Select Publications', choices = publications)
-    #       #     )
-    #       #   ),
-    #       shiny::fluidRow(
-    #         shiny::column(width = 4,
-    #           shiny::tags$h6('Northwest Corner'),
-    #           shiny::tags$hr(style='height:2px; opacity: 1;'),
-    #           shiny::fluidRow(
-    #             shiny::column(width = 4, 
-    #               shiny::numericInput('bboxNWLat', 'Latitude', value = NA, 
-    #                 min = -90, max = 90)
-    #               ),
-    #             shiny::column(width = 4,
-    #               shiny::numericInput('bboxNWLon', 'Longitude', value = NA,
-    #                 min = -180, max = 180)
-    #             )
-    #           )
-    #         ),
-    #         shiny::column(width = 4,
-    #           shiny::tags$h6('Southeast Corner'),
-    #           shiny::tags$hr(style='height:2px; opacity: 1;'),
-    #           shiny::fluidRow(
-    #             shiny::column(width = 4, 
-    #               shiny::numericInput('bboxSELat', 'Latitude', value = NA, 
-    #                 min = -90, max = 90)
-    #             ),
-    #             shiny::column(width = 6,
-    #               shiny::numericInput('bboxSELon', 'Longitude', value = NA,
-    #                 min = -180, max = 180)
-    #             )
-    #           )
-    #         )
-    #       )
-    #   ),
-    #   card(title = 'Filter Selected Plots', style = 'margin-top: .5rem;',
-    #     shiny::fluidRow(
-    #       shiny::column(width = 3,
-    #         shiny::numericInput(inputId = 'minYear', 'Start year', 
-    #           value = NA, step = 1L)
-    #       ),
-    #       shiny::column(width = 3,
-    #         shiny::numericInput(inputId = 'maxYear', 'End year', 
-    #           value = NA, step = 1L)
-    #       ),
-    #       shiny::column(width = 3,
-    #         shiny::selectizeInput('successionalStatus', 'Successional Status', 
-    #           choices = successionalStatus, multiple = TRUE
-    #         )
-    #       ),
-    #       shiny::column(width = 3,
-    #         shiny::selectInput('structuralStage', 'Structural Stage',
-    #           multiple = TRUE, choices = structuralStage)
-    #       )
-    #     ),
-    #     shiny::fluidRow(
-    #       shiny::column(width = 3,
-    #         shiny::selectizeInput('sitePlotQuality', 'Site Plot Quality',
-    #           choices = sitePlotQuality, 
-    #           multiple = TRUE)
-    #       ),
-    #       shiny::column(width = 3,
-    #         shiny::selectizeInput('vegPlotQuality', 'Veg Plot Quality',
-    #           choices = vegPlotQuality, 
-    #           multiple = TRUE)
-    #       ),
-    #       shiny::column(width = 3,
-    #         shiny::selectizeInput('soilPlotQuality', 'Soil Plot Quality',
-    #           choices = soilPlotQuality, 
-    #           multiple = TRUE)
-    #       ),
-    #       shiny::column(width = 3,
-    #         shiny::selectizeInput(inputId = 'locationAccuracy', 
-    #           label = 'Location Accuracy', multiple = FALSE,
-    #           choices = c('', locationAccuracy))
-    #       )
-    #     ),
-    #     shiny::fluidRow(
-    #       shiny::column(width = 12,
-    #         shiny::checkboxInput(inputId = 'inPublications', 
-    #           'Plots used in published classification only?', value = FALSE)
-    #       )
-    #     )
-    #   ),
-    #   shiny::actionButton('filterTop', 'Apply', style = 'margin-top: .5rem;')
-    # ),
+    shiny::column(width = 3,
+      card(title = NULL,
+        style = 'margin-top: .5rem;',
+        shiny::tags$p(
+          'Use this page to extract plot data from the AVA-Canada. Please begin by selecting plots by area, CAVM subzone or project. This selection can then be filtered to return only plots that match selected criteria. After entering your selection click “Apply” to see the number and location of plots in the right hand pane.'),
+        shiny::uiOutput('lastUpdate')
+      ),
+      shiny::uiOutput('instructions'),
+      card(title = 'Select Plots', style = 'margin-top: .5rem;',
+          shiny::fluidRow(
+            shiny::column(width = 3,
+              shiny::selectizeInput(inputId = 'selectRegion',
+                label = 'Select Region', multiple = TRUE,
+                #selectize = FALSE, size = 2,
+                choices = regions) |> small_selectize()
+            ),
+            shiny::column(width = 3,
+              shiny::selectizeInput(inputId = 'selectZone',
+                label = 'Select Zone', multiple = TRUE,
+                choices = zones) |> small_selectize()
+                ),
+            shiny::column(width = 3,
+              shiny::selectInput(inputId = 'selectSubzone',
+                label = 'Select Subzone', multiple = TRUE,
+                choices = c('')) |>
+                small_selectize()
+              )
+            ),
+          # shiny::fluidRow(
+          #   shiny::column(width = 4,
+          #     shiny::selectizeInput(inputId = 'selectProjectId',
+          #       multiple = TRUE,
+          #       label = 'Select Projects', choices = projectIds$project_id) |>
+          #       small_selectize()
+          #     ),
+          #     shiny::column(width = 4,
+          #       shiny::selectizeInput(inputId = 'selectPublicationId',
+          #         multiple = TRUE,
+          #         label = 'Select Publications', choices = publications)
+          #     )
+          #   ),
+          shiny::fluidRow(
+            shiny::column(width = 4,
+              shiny::tags$h6('Northwest Corner'),
+              shiny::tags$hr(style='height:2px; opacity: 1;'),
+              shiny::fluidRow(
+                shiny::column(width = 4,
+                  shiny::numericInput('bboxNWLat', 'Latitude', value = NA,
+                    min = -90, max = 90)
+                  ),
+                shiny::column(width = 4,
+                  shiny::numericInput('bboxNWLon', 'Longitude', value = NA,
+                    min = -180, max = 180)
+                )
+              )
+            ),
+            shiny::column(width = 4,
+              shiny::tags$h6('Southeast Corner'),
+              shiny::tags$hr(style='height:2px; opacity: 1;'),
+              shiny::fluidRow(
+                shiny::column(width = 4,
+                  shiny::numericInput('bboxSELat', 'Latitude', value = NA,
+                    min = -90, max = 90)
+                ),
+                shiny::column(width = 6,
+                  shiny::numericInput('bboxSELon', 'Longitude', value = NA,
+                    min = -180, max = 180)
+                )
+              )
+            )
+          )
+      ),
+      card(title = 'Filter Selected Plots', style = 'margin-top: .5rem;',
+        shiny::fluidRow(
+          shiny::column(width = 3,
+            shiny::numericInput(inputId = 'minYear', 'Start year',
+              value = NA, step = 1L)
+          ),
+          shiny::column(width = 3,
+            shiny::numericInput(inputId = 'maxYear', 'End year',
+              value = NA, step = 1L)
+          ),
+          shiny::column(width = 3,
+            shiny::selectizeInput('successionalStatus', 'Successional Status',
+              choices = successionalStatus, multiple = TRUE
+            )
+          ),
+          shiny::column(width = 3,
+            shiny::selectInput('structuralStage', 'Structural Stage',
+              multiple = TRUE, choices = structuralStage)
+          )
+        ),
+        shiny::fluidRow(
+          shiny::column(width = 3,
+            shiny::selectizeInput('sitePlotQuality', 'Site Plot Quality',
+              choices = sitePlotQuality,
+              multiple = TRUE)
+          ),
+          shiny::column(width = 3,
+            shiny::selectizeInput('vegPlotQuality', 'Veg Plot Quality',
+              choices = vegPlotQuality,
+              multiple = TRUE)
+          ),
+          shiny::column(width = 3,
+            shiny::selectizeInput('soilPlotQuality', 'Soil Plot Quality',
+              choices = soilPlotQuality,
+              multiple = TRUE)
+          ),
+          shiny::column(width = 3,
+            shiny::selectizeInput(inputId = 'locationAccuracy',
+              label = 'Location Accuracy', multiple = FALSE,
+              choices = c('', locationAccuracy))
+          )
+        ),
+        shiny::fluidRow(
+          shiny::column(width = 12,
+            shiny::checkboxInput(inputId = 'inPublications',
+              'Plots used in published classification only?', value = FALSE)
+          )
+        )
+      ),
+      shiny::actionButton('filterTop', 'Apply', style = 'margin-top: .5rem;')
+    ),
     shiny::column(width = 7,
       style = 'padding-left: 0px;',
       card(title = 'Arctic Plot Locations', style = 'margin-top: .5rem;',

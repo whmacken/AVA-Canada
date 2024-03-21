@@ -20,8 +20,8 @@ function(input, output, session) {
   output$lastUpdate <- shiny::renderUI({
     lastUpdate <- DBI::dbGetQuery(con, 
       'select max(date) as last_update, count(1) as n_rows 
-      from becmaster_env as env
-      inner join becmaster_admin as adm on env.plot_number = adm.plot')
+      from ava_canada_env as env
+      inner join ava_canada_admin as adm on env.plot_number = adm.plot')
     shiny::tags$p(sprintf('The BECMaster dataset contains %s records. Last updated on %s.', 
       prettyNum(as.integer(lastUpdate[['n_rows']]), big.mark = ','), 
       format(lastUpdate[['last_update']], '%Y-%m-%d')))
@@ -39,27 +39,30 @@ function(input, output, session) {
   
   envPlots <- shiny::reactive({
     DBI::dbGetQuery(con, 
-      'select plot_number, latitude, longitude from becmaster_env
+      'select plot_number, latitude, longitude from ava_canada_env
       where latitude is not null and longitude is not null')
   })
   output$map <- leaflet::renderLeaflet({
+    pal <- leaflet::colorFactor(palette = observable6(), domain = bgcs$name)
     leaflet::leaflet(options = leaflet::leafletOptions(preferCanvas = TRUE)) |> 
-      leaflet::addMapPane('forests', zIndex = 410) |> 
+      leaflet::addMapPane('bgcs', zIndex = 410) |> 
       leaflet::addProviderTiles(provider = leaflet::providers$Esri.NatGeoWorldMap) |> 
       leaflet::addCircleMarkers(data = envPlots(),
         popup = ~plot_number,
         lat = ~latitude, lng = ~-longitude, layerId = ~plot_number,
         color = baseColor, radius = baseRadius, stroke = FALSE,
         fillOpacity = .5) |>
-      leaflet::addPolygons(data = forests, fillOpacity = 0, weight = 2, 
-        options = leaflet::pathOptions(pane = 'forests'),
-        opacity = 1, color = bcgov_primary()[1], popup = ~region_nam) |>
-      leaflet::addLabelOnlyMarkers(data = sf::st_centroid(forests, of_largest_polygon = TRUE),
-        label = ~region_nam, labelOptions = leaflet::labelOptions(noHide = TRUE,
+      leaflet::addPolylines(data = provinces, weight = 1, color = 'grey') |> 
+      leaflet::addPolygons(data = bgcs, fillOpacity = 0, weight = 2,
+        options = leaflet::pathOptions(pane = 'bgcs'),
+        opacity = 1, color = ~pal(name), popup = ~name) |>
+      leaflet::addLabelOnlyMarkers(data = sf::st_centroid(bgcs, of_largest_polygon = TRUE),
+        label = ~lapply(sprintf("<span style='color: %s'>%s</span>", pal(name), name), htmltools::HTML), 
+        labelOptions = leaflet::labelOptions(noHide = TRUE,
           textOnly = TRUE, direction = 'center', textsize = '12px',
           style = list('font-weight' = 'bold', color = 'white',
-            'background-color' = paste0(bcgov_primary()[1], '80'),
-            'background-opacity' = .2, 'border-radius' = '10px'))) |> 
+            'background-color' = paste0('#ffffff', 'ff'),
+            'background-opacity' = .2, 'border-radius' = '5px'))) |>
       leaflet.extras::addDrawToolbar(
         targetGroup = 'draw',
         polylineOptions = FALSE,
@@ -149,8 +152,8 @@ function(input, output, session) {
       adm.site_plot_quality,
       adm.veg_plot_quality,
       adm.soil_plot_quality
-    from becmaster_env as env
-    inner join becmaster_admin as adm on env.plot_number = adm.plot'
+    from ava_canada_env as env
+    inner join ava_canada_admin as adm on env.plot_number = adm.plot'
     filterQuery <- vector(mode = 'character', length = 0)
     if (!is.null(input$selectRegion)) {
       filterQuery <- append(filterQuery,
@@ -190,7 +193,7 @@ function(input, output, session) {
     if (!is.null(input$selectPublicationId)) {
       pubProjectIds <- DBI::dbGetQuery(con,
         sprintf("select distinct plot_number 
-        from becmaster_link_refs_plots
+        from ava_canada_link_refs_plots
         where ref_short_name in (%s)", 
           paste(DBI::dbQuoteString(con, input$selectPublicationId), 
             collapse = ','))
@@ -253,7 +256,7 @@ function(input, output, session) {
     if (isTRUE(input$inPublications)) {
       pubProjectIds <- DBI::dbGetQuery(con,
         "select distinct plot_number 
-        from becmaster_link_refs_plots
+        from ava_canada_link_refs_plots
         where ref_short_name is not null")[['plot_number']]
       filterQuery <- append(filterQuery,
         sprintf('plot_number in (%s)',
@@ -295,13 +298,13 @@ function(input, output, session) {
     shiny::tags$h3(prettyNum(nrow(selectedPlots()), big.mark = ','))
   })
   tableQueries <- c(
-    env = 'select * from becmaster_env where plot_number in (%s)',
-    admin = 'select * from becmaster_admin where plot in (%s)',
-    metadata = 'select distinct m.* from becmaster_metadata as m 
-    inner join becmaster_env as e on m.project_id = e.project_id where plot_number in (%s)',
-    humus = 'select * from becmaster_humus where plot_number in (%s)',
-    mineral = 'select * from becmaster_mineral where plot_number in (%s)',
-    veg = 'select * from becmaster_veg where plot_number in (%s)')
+    env = 'select * from ava_canada_env where plot_number in (%s)',
+    admin = 'select * from ava_canada_admin where plot in (%s)',
+    metadata = 'select distinct m.* from ava_canada_metadata as m 
+    inner join ava_canada_env as e on m.project_id = e.project_id where plot_number in (%s)',
+    humus = 'select * from ava_canada_humus where plot_number in (%s)',
+    mineral = 'select * from ava_canada_mineral where plot_number in (%s)',
+    veg = 'select * from ava_canada_veg where plot_number in (%s)')
   output$download <- downloadHandler(
     filename = function() {
       paste("data-", Sys.Date(), ".zip", sep="")

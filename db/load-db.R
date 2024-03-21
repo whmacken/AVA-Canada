@@ -90,6 +90,14 @@ leaflet::leaflet(bgcs) |>
 DBI::dbWriteTable(pgCon, value = bgcs, name = DBI::SQL('arctic_bgcs'),
   overwrite = TRUE)
 
+
+# Provinces ---------------------------------------------------------------
+
+provinces <- sf::st_read('data/canadian_provinces_wgs84.gpkg')
+names(provinces) <- tolower(names(provinces))
+DBI::dbWriteTable(pgCon, value = provinces, name = DBI::SQL('canada_provinces'),
+  overwrite = TRUE)
+
 # Grant Privileges --------------------------------------------------------
 
 # DBI::dbExecute(pgCon, 
