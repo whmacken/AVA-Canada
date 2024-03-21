@@ -28,7 +28,7 @@ function(input, output, session) {
   })
   shiny::observeEvent(input$selectZone, {
     shiny::updateSelectizeInput(session = session, inputId = 'selectSubzone',
-      choices = subzones[[input$selectZone]])
+      choices = subzones[input$selectZone])
   })
   
   ###########################################################################
@@ -157,7 +157,8 @@ function(input, output, session) {
     filterQuery <- vector(mode = 'character', length = 0)
     if (!is.null(input$selectRegion)) {
       filterQuery <- append(filterQuery,
-        sprintf('UPPER(LEFT(fsregion_district, 3)) in (%s)', 
+        sprintf('UPPER(%s(fsregion_district, 1, 3)) in (%s)', 
+          ifelse(isShinyApps, 'substr', 'substring'),
           paste(DBI::dbQuoteString(con, input$selectRegion), collapse = ', '))
       )
     }
@@ -275,7 +276,7 @@ function(input, output, session) {
     } else {
       query <- baseQuery
     }
-    if (isTRUE(isShinyApps)) {
+    if (isTRUE(isShinyApps) && exists('bboxQuery')) {
       sf::st_read(dsn = 'ava_canada.gpkg', query = query)
     } else {
       DBI::dbGetQuery(con, query)
