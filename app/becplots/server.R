@@ -24,7 +24,7 @@ function(input, output, session) {
       inner join ava_canada_admin as adm on env.plot_number = adm.plot')
     shiny::tags$p(sprintf('The BECMaster dataset contains %s records. Last updated on %s.', 
       prettyNum(as.integer(lastUpdate[['n_rows']]), big.mark = ','), 
-      format(lastUpdate[['last_update']], '%Y-%m-%d')))
+      format(as.Date(lastUpdate[['last_update']]), '%Y-%m-%d')))
   })
   shiny::observeEvent(input$selectZone, {
     shiny::updateSelectizeInput(session = session, inputId = 'selectSubzone',
@@ -184,11 +184,16 @@ function(input, output, session) {
     }
     if (!is.na(input$bboxNWLat) && !is.na(input$bboxNWLon) &&
         !is.na(input$bboxSELat) && !is.na(input$bboxSELon)) {
-      filterQuery <- append(filterQuery,
-        sprintf(
-        "ST_Intersects(ST_SetSRID(ST_MakePoint(-longitude, latitude), 4326)::geography, 'SRID=4326;%s'::geography)", 
-        sf::st_as_text(bbox()))
-      )
+      if (isTRUE(isShinyApps)) {
+        bboxQuery <- sprintf(
+          "ST_Intersects(MakePoint(-longitude, latitude, 4326), ST_GeomFromText('%s', 4326))",
+          sf::st_as_text(bbox()))
+      } else {
+        bboxQuery <- sprintf(
+          "ST_Intersects(ST_SetSRID(ST_MakePoint(-longitude, latitude), 4326)::geography, 'SRID=4326;%s'::geography)", 
+          sf::st_as_text(bbox()))
+      }
+      filterQuery <- append(filterQuery, bboxQuery)
     }
     if (!is.null(input$selectPublicationId)) {
       pubProjectIds <- DBI::dbGetQuery(con,
@@ -270,8 +275,11 @@ function(input, output, session) {
     } else {
       query <- baseQuery
     }
-    query |> 
-      DBI::dbGetQuery(conn = con)
+    if (isTRUE(isShinyApps)) {
+      sf::st_read(dsn = 'ava_canada.gpkg', query = query)
+    } else {
+      DBI::dbGetQuery(con, query)
+    }
   })
   shiny::observeEvent(selectedPlots(), {
     leaflet::leafletProxy('map') |> 
