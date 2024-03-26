@@ -1,6 +1,6 @@
 
 fluidPage(
-  windowTitle = 'BEC Plots',
+  windowTitle = 'Arctic Ecosystem Plots',
   shiny::tags$head(
     shiny::tags$link(rel = 'stylesheet', type = 'text/css', href = 'styles.css'),
     ),
