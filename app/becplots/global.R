@@ -2,7 +2,8 @@ library(shiny)
 library(mapboxer)
 #username = "becmaster_reader"; password = "BECdata"
 library(DBI) 
-source("../../creds.R")
+#source("../../creds.R")
+source("./creds.R")
 # options(shiny.maxRequestSize = 60 * 1024 ^ 2)
 isShinyApps <- TRUE
 
