@@ -10,70 +10,76 @@ fluidPage(
     shiny::tags$div(
       style=sprintf("display: flex; justify-content: space-between; flex-wrap: wrap; align-content: center; padding: .5rem; background-color: %s", bcgov_primary()[1]),
       shiny::tags$h3('Arctic Vegetation Archive - Canada', style="color: white; margin-top: auto; margin-bottom: auto"),
-      shiny::tags$img(src='gov_bc_logo.svg', height = 35)
+      #shiny::tags$img(src='gov_bc_logo.svg', height = 35)
       
     ),
     shiny::column(width = 3,
       card(title = NULL,
         style = 'margin-top: .5rem;',
         shiny::tags$p(
-          'Use this page to extract plot data from the AVA-Canada. Please begin by selecting plots by area, CAVM subzone or project. This selection can then be filtered to return only plots that match selected criteria. After entering your selection click “Apply” to see the number and location of plots in the right hand pane.'),
+          'Use this page to extract plot data from the AVA-Canada. Please begin by selecting plots by area, CAVM subzone or project. This selection can then be filtered to return only plots that match selected criteria. After entering your selection click “Apply Filter” to see the number and location of plots in the right hand pane.
+          Choose the format of data and click download.'),
         shiny::uiOutput('lastUpdate')
       ),
       shiny::uiOutput('instructions'),
-      card(title = 'Select Plots', style = 'margin-top: .5rem;',
+      card(title = 'Select Plots by Area', style = 'margin-top: .5rem;',
           shiny::fluidRow(
             shiny::column(width = 3,
-              shiny::selectizeInput(inputId = 'selectRegion',
-                label = 'Select Region', multiple = TRUE,
+              shiny::selectizeInput(inputId = 'selectGuide',
+                label = 'Select Fieldguide', multiple = TRUE,
                 #selectize = FALSE, size = 2,
-                choices = regions) |> small_selectize()
+                choices = guides) |> small_selectize()
+            ),
+            #shiny::column(width = 3,
+              # shiny::selectizeInput(inputId = 'selectZone',
+              #   label = 'Select BGC Zone', multiple = TRUE,
+              #   choices = zones) |> small_selectize()
+              #   ),
+            shiny::column(width = 3,
+              shiny::selectizeInput(inputId = 'selectProvince',
+              multiple = TRUE,
+              label = 'Select Province', choices = provinces$prov)
             ),
             shiny::column(width = 3,
-              shiny::selectizeInput(inputId = 'selectZone',
-                label = 'Select Zone', multiple = TRUE,
-                choices = zones) |> small_selectize()
-                ),
-            shiny::column(width = 3,
               shiny::selectInput(inputId = 'selectSubzone',
-                label = 'Select Subzone', multiple = TRUE,
+                label = 'Select CAVM', multiple = TRUE,
                 choices = c('')) |>
                 small_selectize()
               )
             ),
           # shiny::fluidRow(
-          #   shiny::column(width = 4,
-          #     shiny::selectizeInput(inputId = 'selectProjectId',
-          #       multiple = TRUE,
-          #       label = 'Select Projects', choices = projectIds$project_id) |>
-          #       small_selectize()
-          #     ),
+          #   # shiny::column(width = 4,
+          #   #   shiny::selectizeInput(inputId = 'selectProjectId',
+          #   #     multiple = TRUE,
+          #   #     label = 'Select Projects', choices = projectIds$project_id) |>
+          #   #     small_selectize()
+          #   #   ),
           #     shiny::column(width = 4,
-          #       shiny::selectizeInput(inputId = 'selectPublicationId',
+          #       shiny::selectizeInput(inputId = 'selectProvince',
           #         multiple = TRUE,
-          #         label = 'Select Publications', choices = publications)
+          #         label = 'Select Province', choices = provinces$prov)
           #     )
           #   ),
           shiny::fluidRow(
-            shiny::column(width = 4,
+            shiny::column(width = 6,
               shiny::tags$h6('Northwest Corner'),
               shiny::tags$hr(style='height:2px; opacity: 1;'),
               shiny::fluidRow(
-                shiny::column(width = 4,
+                shiny::column(width = 6,
                   shiny::numericInput('bboxNWLat', 'Latitude', value = NA,
                     min = -90, max = 90)
                   ),
-                shiny::column(width = 4,
+                shiny::column(width = 6,
                   shiny::numericInput('bboxNWLon', 'Longitude', value = NA,
                     min = -180, max = 180)
                 )
               )
             ),
-            shiny::column(width = 4,
+            shiny::column(width = 6,
               shiny::tags$h6('Southeast Corner'),
               shiny::tags$hr(style='height:2px; opacity: 1;'),
               shiny::fluidRow(
-                shiny::column(width = 4,
+                shiny::column(width = 6,
                   shiny::numericInput('bboxSELat', 'Latitude', value = NA,
                     min = -90, max = 90)
                 ),
@@ -86,31 +92,36 @@ fluidPage(
           )
       ),
       card(title = 'Filter Selected Plots', style = 'margin-top: .5rem;',
+        # shiny::fluidRow(
+        #   shiny::column(width = 3,
+        #     shiny::numericInput(inputId = 'minYear', 'Start year',
+        #       value = NA, step = 1L)
+        #   ),
+        #   shiny::column(width = 3,
+        #     shiny::numericInput(inputId = 'maxYear', 'End year',
+        #       value = NA, step = 1L)
+        #   ),
+        #   shiny::column(width = 3,
+        #     shiny::selectizeInput('successionalStatus', 'Successional Status',
+        #       choices = successionalStatus, multiple = TRUE
+        #     )
+        #   ),
+        #   shiny::column(width = 3,
+        #     shiny::selectInput('structuralStage', 'Structural Stage',
+        #       multiple = TRUE, choices = structuralStage)
+        #   )
+        # ),
         shiny::fluidRow(
-          shiny::column(width = 3,
-            shiny::numericInput(inputId = 'minYear', 'Start year',
-              value = NA, step = 1L)
-          ),
-          shiny::column(width = 3,
-            shiny::numericInput(inputId = 'maxYear', 'End year',
-              value = NA, step = 1L)
-          ),
-          shiny::column(width = 3,
-            shiny::selectizeInput('successionalStatus', 'Successional Status',
-              choices = successionalStatus, multiple = TRUE
-            )
-          ),
-          shiny::column(width = 3,
-            shiny::selectInput('structuralStage', 'Structural Stage',
-              multiple = TRUE, choices = structuralStage)
-          )
-        ),
-        shiny::fluidRow(
-          shiny::column(width = 3,
-            shiny::selectizeInput('sitePlotQuality', 'Site Plot Quality',
-              choices = sitePlotQuality,
-              multiple = TRUE)
-          ),
+          # shiny::column(width = 3,
+          #   shiny::selectizeInput('sitePlotQuality', 'Site Plot Quality',
+          #     choices = sitePlotQuality,
+          #     multiple = TRUE)
+          # ),
+          # shiny::column(width = 3,
+          #               shiny::selectizeInput('Realm_Class', 'Realm_Class',
+          #                                     choices = Realm_Class,
+          #                                     multiple = TRUE)
+          # ),
           shiny::column(width = 3,
             shiny::selectizeInput('vegPlotQuality', 'Veg Plot Quality',
               choices = vegPlotQuality,
@@ -163,12 +174,12 @@ fluidPage(
           shiny::column(width = 12,
             shiny::tags$p('This data is available under the ', 
               shiny::tags$a(
-                href = 'https://www2.gov.bc.ca/gov/content/data/open-data/open-government-licence-bc',
-                'Open Government License – British Columbia'),
+                href = 'https://creativecommons.org/licenses/by/4.0/',
+                'Creative Commons by Attribution license'),
               '.'),
             shiny::tags$p('Please include the following statement in the publication, presentation, or dissemination of any analysis conducted with the AVA-Canada data:
-"The plot data used in this analysis was provided by the Biogeoclimatic Ecosystem Classification program of the Province of British Columbia"'),
-            shiny::tags$p('Formal citation: Arctic Vegetation Archive - Canada. [current year]. ArcticMaster ecosystem plot database  [VPro/MSAccess format]. W.H. MacKenzie [editor]. Smithers, British Columbia.')
+"The plot data used in this analysis was provided by the Arctic Vegetation Archive - Canada"'),
+            shiny::tags$p('Formal citation: W.H. MacKenzie, W.H. 2024. Arctic Vegetation Archive - Canada: Ecosystem plot database, https:// .Retrieved [accessed date]')
           )
         )
       )
