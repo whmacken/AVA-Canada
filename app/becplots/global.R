@@ -113,15 +113,14 @@ small_selectize <- function(selectize) {
 
 #projectIds <- DBI::dbGetQuery(con,
   #statement = 'SELECT distinct project_id	FROM public.becmaster_metadata')
-regions <- c(
-  'Cariboo-Chilcotin' = 'RCB',
-  'Kootenay-Boundary' = 'RKB',
-  'Northeast' = 'RNO',
-  'Omineca' = 'ROM',
-  'South Coast' = 'RSC',
-  'Skeena' = 'RSK',
-  'Thompson-Okanagan' = 'RTO',
-  'West Coast' = 'RWC'
+
+guides <- c(
+  'Arctic Archipelago' = 'AA',
+  'Central Continental' = 'CC',
+  'Baffin-Ellesmere' = 'BE',
+  'Quebec-Labrador' = 'QL',
+  'Yukon' = 'YK',
+  'NA' = ''
 )
 zones <- DBI::dbGetQuery(con, 
   statement = 'SELECT DISTINCT zone
@@ -183,5 +182,8 @@ locationAccuracy <- c(
   '<1000m' = ' <= 1000',
   '>1000m' = ' > 1000'
 )
-bgcs <- sf::st_read(con, layer = 'arctic_bgcs')
-provinces <- sf::st_read(con, layer = 'canada_provinces')
+#bgcs <- sf::st_read(con, layer = 'arctic_bgcs') %>% dplyr::select(name, geom)
+# provinces <- sf::st_read(con, layer = 'canada_provinces')
+cavm <- sf::st_read(con, layer = 'cavm')
+provinces <- sf::st_read(con, layer = 'provinces')
+fg <- sf::st_read(con, layer = 'fieldguides')%>% st_zm()
