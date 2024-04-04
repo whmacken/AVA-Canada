@@ -2,6 +2,8 @@
 ## First create a new postgres database in PGAdmin (local). 
 ##For this need to have a local postgres server installed on your machine
 ## This script then creates the table and field setup in the postgres db from a VPro template
+## then run load-db.R
+##then run make-gpkg.R to create the package of data for shiny upload
 
 library(DBI) 
 
