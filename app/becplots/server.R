@@ -6,9 +6,9 @@ function(input, output, session) {
   #                                                                         #
   ###########################################################################
   
-  baseColor <- 'black'
-  selectColor <- 'red'
-  bboxColor <- 'blue'
+  baseColor <- 'purple'
+  selectColor <- 'yellow'
+  bboxColor <- 'lightblue'
   baseRadius <- 5
   
   ###########################################################################
@@ -22,7 +22,7 @@ function(input, output, session) {
       'select max(date) as last_update, count(1) as n_rows 
       from ava_canada_env as env
       inner join ava_canada_admin as adm on env.plot_number = adm.plot')
-    shiny::tags$p(sprintf('The BECMaster dataset contains %s records. Last updated on %s.', 
+    shiny::tags$p(sprintf('The AVA-Canada dataset contains %s records. Last updated on %s.', 
       prettyNum(as.integer(lastUpdate[['n_rows']]), big.mark = ','), 
       format(as.Date(lastUpdate[['last_update']]), '%Y-%m-%d')))
   })
@@ -43,26 +43,28 @@ function(input, output, session) {
       where latitude is not null and longitude is not null')
   })
   output$map <- leaflet::renderLeaflet({
-    pal <- leaflet::colorFactor(palette = observable6(), domain = bgcs$name)
+    pal <- leaflet::colorFactor(palette = observable6(), domain = fg$fgcode)
     leaflet::leaflet(options = leaflet::leafletOptions(preferCanvas = TRUE)) |> 
-      leaflet::addMapPane('bgcs', zIndex = 410) |> 
-      leaflet::addProviderTiles(provider = leaflet::providers$Esri.NatGeoWorldMap) |> 
+      leaflet::addMapPane('fg', zIndex = 410) |> 
+      leaflet::addProviderTiles(provider = leaflet::providers$Esri.NatGeoWorldMap) |>
       leaflet::addCircleMarkers(data = envPlots(),
-        popup = ~plot_number,
-        lat = ~latitude, lng = ~-longitude, layerId = ~plot_number,
-        color = baseColor, radius = baseRadius, stroke = FALSE,
-        fillOpacity = .5) |>
-      leaflet::addPolylines(data = provinces, weight = 1, color = 'grey') |> 
-      leaflet::addPolygons(data = bgcs, fillOpacity = 0, weight = 2,
-        options = leaflet::pathOptions(pane = 'bgcs'),
-        opacity = 1, color = ~pal(name), popup = ~name) |>
-      leaflet::addLabelOnlyMarkers(data = sf::st_centroid(bgcs, of_largest_polygon = TRUE),
-        label = ~lapply(sprintf("<span style='color: %s'>%s</span>", pal(name), name), htmltools::HTML), 
-        labelOptions = leaflet::labelOptions(noHide = TRUE,
-          textOnly = TRUE, direction = 'center', textsize = '12px',
-          style = list('font-weight' = 'bold', color = 'white',
-            'background-color' = paste0('#ffffff', 'ff'),
-            'background-opacity' = .2, 'border-radius' = '5px'))) |>
+                                popup = ~plot_number,
+                                lat = ~latitude, lng = ~-longitude, layerId = ~plot_number,
+                                color = baseColor, radius = baseRadius, stroke = FALSE,
+                                fillOpacity = .5) |>
+
+       leaflet::addPolygons(data = fg, fillOpacity = .4, weight = 1,
+                           options = leaflet::pathOptions(pane = 'fg'),
+                           opacity = 1, color = ~pal(fgcode), popup = ~fieldguidename) |>
+      
+      leaflet::addPolylines(data = provinces, weight = 1, color = 'grey20') |>
+      leaflet::addLabelOnlyMarkers(data = sf::st_centroid(fg, of_largest_polygon = TRUE),
+                                   label = ~lapply(sprintf("<span style='color: %s'>%s</span>", pal(fgcode), fgcode), htmltools::HTML),
+                                   labelOptions = leaflet::labelOptions(noHide = TRUE,
+                                                                        textOnly = TRUE, direction = 'center', textsize = '12px',
+                                                                        style = list('font-weight' = 'bold', color = 'white',
+                                                                                     'background-color' = paste0('#ffffff', 'ff'),
+                                                                                     'background-opacity' = .2, 'border-radius' = '5px'))) |>
       leaflet.extras::addDrawToolbar(
         targetGroup = 'draw',
         polylineOptions = FALSE,
@@ -82,6 +84,7 @@ function(input, output, session) {
       )
   })
   
+ 
   ###########################################################################
   #                                                                         #   
   # Bounding Box                                                            #
@@ -133,7 +136,7 @@ function(input, output, session) {
   
   ###########################################################################
   #                                                                         #   
-  # Apply Filters                                                           #
+  #Select Areas                                                          #
   #                                                                         #
   ###########################################################################
   
@@ -149,17 +152,28 @@ function(input, output, session) {
       env.date,
       env.successional_status,
       env.structural_stage,
+      env.realm_class
       adm.site_plot_quality,
       adm.veg_plot_quality,
       adm.soil_plot_quality
+      adm.province_state_territory
+
     from ava_canada_env as env
     inner join ava_canada_admin as adm on env.plot_number = adm.plot'
+    # filterQuery <- vector(mode = 'character', length = 0)
+    # if (!is.null(input$selectRegion)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf('UPPER(%s(fsregion_district, 1, 3)) in (%s)', 
+    #       ifelse(isShinyApps, 'substr', 'substring'),
+    #       paste(DBI::dbQuoteString(con, input$selectRegion), collapse = ', '))
+    #   )
+    # }
     filterQuery <- vector(mode = 'character', length = 0)
-    if (!is.null(input$selectRegion)) {
+    if (!is.null(input$selectGuide)) {
       filterQuery <- append(filterQuery,
-        sprintf('UPPER(%s(fsregion_district, 1, 3)) in (%s)', 
-          ifelse(isShinyApps, 'substr', 'substring'),
-          paste(DBI::dbQuoteString(con, input$selectRegion), collapse = ', '))
+                           sprintf('UPPER(fsregion_district) in (%s)', 
+                                    #ifelse(isShinyApps, 'substr', 'substring'),
+                                    paste(DBI::dbQuoteString(con, input$selectGuide), collapse = ', '))
       )
     }
     if (!is.null(input$selectZone)) {
@@ -210,7 +224,15 @@ function(input, output, session) {
           collapse = ','))
       )
     }
-    if (!is.na(input$minYear)) {
+
+    ###########################################################################
+    #                                                                         #   
+    # Apply Filters                                                           #
+    #                                                                         #
+    ###########################################################################
+    
+    
+        if (!is.na(input$minYear)) {
       filterQuery <- append(filterQuery,
         sprintf("date_part('year', date) >= '%s'", input$minYear)
       )
@@ -257,6 +279,13 @@ function(input, output, session) {
     if (input$locationAccuracy != '') {
       filterQuery <- append(filterQuery,
         sprintf('location_accuracy %s', input$locationAccuracy)
+      )
+    }
+    if (!is.null(input$Realm_Class)) {
+      filterQuery <- append(filterQuery,
+                            sprintf('UPPER(realm_class) in (%s)', 
+                                    paste(DBI::dbQuoteString(con, toupper(input$realm_class)), 
+                                          collapse = ', '))
       )
     }
     if (isTRUE(input$inPublications)) {
