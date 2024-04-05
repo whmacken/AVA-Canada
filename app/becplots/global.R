@@ -186,4 +186,4 @@ locationAccuracy <- c(
 # provinces <- sf::st_read(con, layer = 'canada_provinces')
 cavm <- sf::st_read(con, layer = 'cavm')
 provinces <- sf::st_read(con, layer = 'provinces')
-fg <- sf::st_read(con, layer = 'fieldguides')%>% st_zm()
+fg <- sf::st_read(con, layer = 'fieldguides')%>% sf::st_zm()
