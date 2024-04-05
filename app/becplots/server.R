@@ -265,7 +265,6 @@ function(input, output, session) {
     #         collapse = ', '))
     #   )
     # }
-<<<<<<< HEAD
     # if (!is.null(input$vegPlotQuality)) {
     #   filterQuery <- append(filterQuery,
     #     sprintf('UPPER(veg_plot_quality) in (%s)', 
@@ -285,7 +284,7 @@ function(input, output, session) {
     #     sprintf('location_accuracy %s', input$locationAccuracy)
     #   )
     # }
-=======
+
     if (!is.null(input$vegPlotQuality)) {
       filterQuery <- append(filterQuery,
         sprintf('UPPER(veg_plot_quality) in (%s)', 
@@ -305,7 +304,7 @@ function(input, output, session) {
         sprintf('location_accuracy %s', input$locationAccuracy)
       )
     }
->>>>>>> d8ae5453d769e3c960c82a377153237c4478a771
+
     if (!is.null(input$Realm_Class)) {
       filterQuery <- append(filterQuery,
                             sprintf('UPPER(realm_class) in (%s)', 
@@ -325,7 +324,7 @@ function(input, output, session) {
       )
     }
     
-    browser()
+    #browser()
     # compile queries
     if (length(filterQuery) > 0) {
       query <- sprintf('%s\nWHERE %s', baseQuery, paste(filterQuery, collapse = '\n AND '))
