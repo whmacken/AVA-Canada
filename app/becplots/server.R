@@ -152,10 +152,10 @@ function(input, output, session) {
       env.date,
       env.successional_status,
       env.structural_stage,
-      env.realm_class
+      env.realm_class,
       adm.site_plot_quality,
       adm.veg_plot_quality,
-      adm.soil_plot_quality
+      adm.soil_plot_quality,
       adm.province_state_territory
 
     from ava_canada_env as env
@@ -232,36 +232,36 @@ function(input, output, session) {
     ###########################################################################
     
     
-        if (!is.na(input$minYear)) {
-      filterQuery <- append(filterQuery,
-        sprintf("date_part('year', date) >= '%s'", input$minYear)
-      )
-    }
-    if (!is.na(input$maxYear)) {
-      filterQuery <- append(filterQuery,
-        sprintf("date_part('year', date) <= '%s'", input$maxYear)
-      )
-    }
-    if (!is.null(input$successionalStatus)) {
-      filterQuery <- append(filterQuery,
-        sprintf('UPPER(successional_status) in (%s)', 
-        paste(DBI::dbQuoteString(con, toupper(input$successionalStatus)), 
-          collapse = ', '))
-      )
-    }
-    if (!is.null(input$structuralStage)) {
-      filterQuery <- append(filterQuery,
-        sprintf('LOWER(LEFT(structural_stage, 2)) in (%s)', 
-          paste(DBI::dbQuoteString(con, input$structuralStage), collapse = ', '))
-      )
-    }
-    if (!is.null(input$sitePlotQuality)) {
-      filterQuery <- append(filterQuery,
-        sprintf('UPPER(site_plot_quality) in (%s)', 
-          paste(DBI::dbQuoteString(con, toupper(input$sitePlotQuality)), 
-            collapse = ', '))
-      )
-    }
+    # if (!is.na(input$minYear)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf("date_part('year', date) >= '%s'", input$minYear)
+    #   )
+    # }
+    # if (!is.na(input$maxYear)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf("date_part('year', date) <= '%s'", input$maxYear)
+    #   )
+    # }
+    # if (!is.null(input$successionalStatus)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf('UPPER(successional_status) in (%s)', 
+    #     paste(DBI::dbQuoteString(con, toupper(input$successionalStatus)), 
+    #       collapse = ', '))
+    #   )
+    # }
+    # if (!is.null(input$structuralStage)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf('LOWER(LEFT(structural_stage, 2)) in (%s)', 
+    #       paste(DBI::dbQuoteString(con, input$structuralStage), collapse = ', '))
+    #   )
+    # }
+    # if (!is.null(input$sitePlotQuality)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf('UPPER(site_plot_quality) in (%s)', 
+    #       paste(DBI::dbQuoteString(con, toupper(input$sitePlotQuality)), 
+    #         collapse = ', '))
+    #   )
+    # }
     if (!is.null(input$vegPlotQuality)) {
       filterQuery <- append(filterQuery,
         sprintf('UPPER(veg_plot_quality) in (%s)', 
