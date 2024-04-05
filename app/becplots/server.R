@@ -170,10 +170,11 @@ function(input, output, session) {
     # }
     filterQuery <- vector(mode = 'character', length = 0)
     if (!is.null(input$selectGuide)) {
-      filterQuery <- append(filterQuery,
-                           sprintf('UPPER(fsregion_district) in (%s)', 
+
+            filterQuery <- append(filterQuery,
+                           sprintf('fsregion_district in (%s)', 
                                     #ifelse(isShinyApps, 'substr', 'substring'),
-                                    paste(DBI::dbQuoteString(con, input$selectGuide), collapse = ', '))
+                                    paste(DBI::dbQuoteString(con, input$selectGuide), collapse = ','))
       )
     }
     if (!is.null(input$selectZone)) {
@@ -190,6 +191,8 @@ function(input, output, session) {
             collapse = ','))
       )
     }
+    
+
     if (!is.null(input$selectProjectId)) {
       filterQuery <- append(filterQuery,
         sprintf('project_id in (%s)',
@@ -232,55 +235,55 @@ function(input, output, session) {
     ###########################################################################
     
     
-        if (!is.na(input$minYear)) {
-      filterQuery <- append(filterQuery,
-        sprintf("date_part('year', date) >= '%s'", input$minYear)
-      )
-    }
-    if (!is.na(input$maxYear)) {
-      filterQuery <- append(filterQuery,
-        sprintf("date_part('year', date) <= '%s'", input$maxYear)
-      )
-    }
-    if (!is.null(input$successionalStatus)) {
-      filterQuery <- append(filterQuery,
-        sprintf('UPPER(successional_status) in (%s)', 
-        paste(DBI::dbQuoteString(con, toupper(input$successionalStatus)), 
-          collapse = ', '))
-      )
-    }
-    if (!is.null(input$structuralStage)) {
-      filterQuery <- append(filterQuery,
-        sprintf('LOWER(LEFT(structural_stage, 2)) in (%s)', 
-          paste(DBI::dbQuoteString(con, input$structuralStage), collapse = ', '))
-      )
-    }
-    if (!is.null(input$sitePlotQuality)) {
-      filterQuery <- append(filterQuery,
-        sprintf('UPPER(site_plot_quality) in (%s)', 
-          paste(DBI::dbQuoteString(con, toupper(input$sitePlotQuality)), 
-            collapse = ', '))
-      )
-    }
-    if (!is.null(input$vegPlotQuality)) {
-      filterQuery <- append(filterQuery,
-        sprintf('UPPER(veg_plot_quality) in (%s)', 
-          paste(DBI::dbQuoteString(con, toupper(input$vegPlotQuality)), 
-            collapse = ', '))
-      )
-    }
-    if (!is.null(input$soilPlotQuality)) {
-      filterQuery <- append(filterQuery,
-        sprintf('UPPER(soil_plot_quality) in (%s)', 
-          paste(DBI::dbQuoteString(con, toupper(input$soilPlotQuality)), 
-            collapse = ', '))
-      )
-    }
-    if (input$locationAccuracy != '') {
-      filterQuery <- append(filterQuery,
-        sprintf('location_accuracy %s', input$locationAccuracy)
-      )
-    }
+    #     if (!is.na(input$minYear)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf("date_part('year', date) >= '%s'", input$minYear)
+    #   )
+    # }
+    # if (!is.na(input$maxYear)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf("date_part('year', date) <= '%s'", input$maxYear)
+    #   )
+    # }
+    # if (!is.null(input$successionalStatus)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf('UPPER(successional_status) in (%s)', 
+    #     paste(DBI::dbQuoteString(con, toupper(input$successionalStatus)), 
+    #       collapse = ', '))
+    #   )
+    # }
+    # if (!is.null(input$structuralStage)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf('LOWER(LEFT(structural_stage, 2)) in (%s)', 
+    #       paste(DBI::dbQuoteString(con, input$structuralStage), collapse = ', '))
+    #   )
+    # }
+    # if (!is.null(input$sitePlotQuality)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf('UPPER(site_plot_quality) in (%s)', 
+    #       paste(DBI::dbQuoteString(con, toupper(input$sitePlotQuality)), 
+    #         collapse = ', '))
+    #   )
+    # }
+    # if (!is.null(input$vegPlotQuality)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf('UPPER(veg_plot_quality) in (%s)', 
+    #       paste(DBI::dbQuoteString(con, toupper(input$vegPlotQuality)), 
+    #         collapse = ', '))
+    #   )
+    # }
+    # if (!is.null(input$soilPlotQuality)) {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf('UPPER(soil_plot_quality) in (%s)', 
+    #       paste(DBI::dbQuoteString(con, toupper(input$soilPlotQuality)), 
+    #         collapse = ', '))
+    #   )
+    # }
+    # if (input$locationAccuracy != '') {
+    #   filterQuery <- append(filterQuery,
+    #     sprintf('location_accuracy %s', input$locationAccuracy)
+    #   )
+    # }
     if (!is.null(input$Realm_Class)) {
       filterQuery <- append(filterQuery,
                             sprintf('UPPER(realm_class) in (%s)', 
@@ -299,6 +302,8 @@ function(input, output, session) {
             collapse = ','))
       )
     }
+    
+    browser()
     # compile queries
     if (length(filterQuery) > 0) {
       query <- sprintf('%s\nWHERE %s', baseQuery, paste(filterQuery, collapse = '\n AND '))
@@ -311,6 +316,8 @@ function(input, output, session) {
       DBI::dbGetQuery(con, query)
     }
   })
+  
+
   shiny::observeEvent(selectedPlots(), {
     leaflet::leafletProxy('map') |> 
       leaflet::clearGroup('bbox') |> 
