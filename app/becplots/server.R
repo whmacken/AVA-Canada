@@ -152,10 +152,10 @@ function(input, output, session) {
       env.date,
       env.successional_status,
       env.structural_stage,
-      env.realm_class
+      env.realm_class,
       adm.site_plot_quality,
       adm.veg_plot_quality,
-      adm.soil_plot_quality
+      adm.soil_plot_quality,
       adm.province_state_territory
 
     from ava_canada_env as env
@@ -265,6 +265,7 @@ function(input, output, session) {
     #         collapse = ', '))
     #   )
     # }
+<<<<<<< HEAD
     # if (!is.null(input$vegPlotQuality)) {
     #   filterQuery <- append(filterQuery,
     #     sprintf('UPPER(veg_plot_quality) in (%s)', 
@@ -284,6 +285,27 @@ function(input, output, session) {
     #     sprintf('location_accuracy %s', input$locationAccuracy)
     #   )
     # }
+=======
+    if (!is.null(input$vegPlotQuality)) {
+      filterQuery <- append(filterQuery,
+        sprintf('UPPER(veg_plot_quality) in (%s)', 
+          paste(DBI::dbQuoteString(con, toupper(input$vegPlotQuality)), 
+            collapse = ', '))
+      )
+    }
+    if (!is.null(input$soilPlotQuality)) {
+      filterQuery <- append(filterQuery,
+        sprintf('UPPER(soil_plot_quality) in (%s)', 
+          paste(DBI::dbQuoteString(con, toupper(input$soilPlotQuality)), 
+            collapse = ', '))
+      )
+    }
+    if (input$locationAccuracy != '') {
+      filterQuery <- append(filterQuery,
+        sprintf('location_accuracy %s', input$locationAccuracy)
+      )
+    }
+>>>>>>> d8ae5453d769e3c960c82a377153237c4478a771
     if (!is.null(input$Realm_Class)) {
       filterQuery <- append(filterQuery,
                             sprintf('UPPER(realm_class) in (%s)', 
