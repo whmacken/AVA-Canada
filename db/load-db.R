@@ -88,13 +88,13 @@ DBI::dbWriteTable(pgCon, name = DBI::SQL('becmaster_zones'), value = zones,
 
 # Add Arctic CAVM ------------------------------------------------------
 
-cavm <- sf::st_read('data/cavm_canada.gpkg') |> 
+cavm <- sf::st_read('data/cavm_canada.gpkg', layer = 'cavm_canada') |> 
   sf::st_transform(4326) |>  st_zm(cavm)
 names(cavm) <- tolower(names(cavm))
 leaflet::leaflet(cavm) |> 
   leaflet::addTiles() |> 
   leaflet::addPolygons()
-DBI::dbWriteTable(pgCon, value = cavm, name = DBI::SQL('CAVM'),
+DBI::dbWriteTable(pgCon, value = cavm, name = DBI::SQL('CAVM_canada'),
   overwrite = TRUE)
 
 # Add CASBEC BGC-----------------------------------------------------------
