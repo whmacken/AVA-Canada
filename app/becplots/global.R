@@ -122,7 +122,9 @@ guides <- c(
   'Yukon' = 'YK',
   'NA' = ''
 )
-zones <- DBI::dbGetQuery(con, 
+
+
+zones <- DBI::dbGetQuery(con,
   statement = 'SELECT DISTINCT zone
   FROM becmaster_zones order by zone')[['zone']]
 subzones <- DBI::dbGetQuery(con, 
@@ -132,6 +134,16 @@ subzones <- split(subzones$bgc, subzones$zone)
 # dateRange <- DBI::dbGetQuery(con,
 #   'select date(min(date)) as min_date, date(max(date)) as max_date 
 #   from becmaster_env')
+
+# zones <- c(
+#   'A' = 'A',
+#   'B' = 'B',
+#   'C' = 'C',
+#   'D' = 'D',
+#   'E' = 'E',
+#   'NA' = ''
+# )
+
 successionalStatus <- c(
   'Old Climax' = 'OC',
   'Maturing Climax' = 'MC',
@@ -184,6 +196,6 @@ locationAccuracy <- c(
 )
 #bgcs <- sf::st_read(con, layer = 'arctic_bgcs') %>% dplyr::select(name, geom)
 # provinces <- sf::st_read(con, layer = 'canada_provinces')
-cavm <- sf::st_read(con, layer = 'cavm')
+cavm <- sf::st_read(con, layer = 'cavm_canada')
 provinces <- sf::st_read(con, layer = 'provinces')
 fg <- sf::st_read(con, layer = 'fieldguides')%>% sf::st_zm()
