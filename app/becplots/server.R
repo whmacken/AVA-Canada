@@ -177,6 +177,22 @@ function(input, output, session) {
                                     paste(DBI::dbQuoteString(con, input$selectGuide), collapse = ','))
       )
     }
+    if (!is.null(input$selectProvince)) {
+      
+      filterQuery <- append(filterQuery,
+                            sprintf('province_state_territory in (%s)', 
+                                    #ifelse(isShinyApps, 'substr', 'substring'),
+                                    paste(DBI::dbQuoteString(con, input$selectProvince), collapse = ','))
+      )
+    }
+    if (!is.null(input$selectCAVM)) {
+      
+      filterQuery <- append(filterQuery,
+                            sprintf('zone in (%s)', 
+                                    #ifelse(isShinyApps, 'substr', 'substring'),
+                                    paste(DBI::dbQuoteString(con, input$selectCAVM), collapse = ','))
+      )
+    }
     if (!is.null(input$selectZone)) {
       filterQuery <- append(filterQuery,
         sprintf('UPPER(zone) in (%s)',
