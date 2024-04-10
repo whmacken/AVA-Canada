@@ -1,4 +1,5 @@
 ### this creates the file with all of the required datatables for functioning on the shiny servers
+### run this if data is changed in the Vpro database of plots or other CAVM related spatial files
 
 source("creds.R") # username, password for pg
 pgCon <- DBI::dbConnect(drv = RPostgres::Postgres(), dbname = 'ava_canada', 
