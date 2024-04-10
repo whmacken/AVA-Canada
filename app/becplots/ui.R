@@ -41,9 +41,9 @@ fluidPage(
               label = 'Select Province', choices = provinces$prov)
             ),
             shiny::column(width = 3,
-              shiny::selectInput(inputId = 'selectSubzone',
+              shiny::selectInput(inputId = 'selectCAVM',
                 label = 'Select CAVM', multiple = TRUE,
-                choices = c('')) |>
+                choices = cavm$cavm_subzone) |>
                 small_selectize()
               )
             ),
