@@ -91,59 +91,59 @@ fluidPage(
             )
           )
       ),
-      card(title = 'Filter Selected Plots', style = 'margin-top: .5rem;',
-        # shiny::fluidRow(
-        #   shiny::column(width = 3,
-        #     shiny::numericInput(inputId = 'minYear', 'Start year',
-        #       value = NA, step = 1L)
-        #   ),
-        #   shiny::column(width = 3,
-        #     shiny::numericInput(inputId = 'maxYear', 'End year',
-        #       value = NA, step = 1L)
-        #   ),
-        #   shiny::column(width = 3,
-        #     shiny::selectizeInput('successionalStatus', 'Successional Status',
-        #       choices = successionalStatus, multiple = TRUE
-        #     )
-        #   ),
-        #   shiny::column(width = 3,
-        #     shiny::selectInput('structuralStage', 'Structural Stage',
-        #       multiple = TRUE, choices = structuralStage)
-        #   )
-        # ),
-        shiny::fluidRow(
-          # shiny::column(width = 3,
-          #   shiny::selectizeInput('sitePlotQuality', 'Site Plot Quality',
-          #     choices = sitePlotQuality,
-          #     multiple = TRUE)
-          # ),
-          # shiny::column(width = 3,
-          #               shiny::selectizeInput('Realm_Class', 'Realm_Class',
-          #                                     choices = Realm_Class,
-          #                                     multiple = TRUE)
-          # ),
-          shiny::column(width = 3,
-            shiny::selectizeInput('vegPlotQuality', 'Veg Plot Quality',
-              choices = vegPlotQuality,
-              multiple = TRUE)
-          ),
-          shiny::column(width = 3,
-            shiny::selectizeInput('soilPlotQuality', 'Soil Plot Quality',
-              choices = soilPlotQuality,
-              multiple = TRUE)
-          ),
-          shiny::column(width = 3,
-            shiny::selectizeInput(inputId = 'locationAccuracy',
-              label = 'Location Accuracy', multiple = FALSE,
-              choices = c('', locationAccuracy))
-          )
-        ),
-        shiny::fluidRow(
-          shiny::column(width = 12,
-            shiny::checkboxInput(inputId = 'inPublications',
-              'Plots used in published classification only?', value = FALSE)
-          )
-        )
+     card(title = 'Filter Selected Plots', style = 'margin-top: .5rem;',
+    shiny::fluidRow(
+    #   shiny::column(width = 3,
+    #     shiny::numericInput(inputId = 'minYear', 'Start year',
+    #       value = NA, step = 1L)
+    #   ),
+    #   shiny::column(width = 3,
+    #     shiny::numericInput(inputId = 'maxYear', 'End year',
+    #       value = NA, step = 1L)
+    #   ),
+    #   shiny::column(width = 3,
+    #     shiny::selectizeInput('successionalStatus', 'Successional Status',
+    #       choices = successionalStatus, multiple = TRUE
+    #     )
+    #   ),
+    #   shiny::column(width = 3,
+    #     shiny::selectInput('structuralStage', 'Structural Stage',
+    #       multiple = TRUE, choices = structuralStage)
+    #   )
+    # ),
+    #   shiny::fluidRow(
+    # shiny::column(width = 3,
+    #   shiny::selectizeInput('sitePlotQuality', 'Site Plot Quality',
+    #     choices = sitePlotQuality,
+    #     multiple = TRUE)
+    # ),
+    # shiny::column(width = 3,
+    #               shiny::selectizeInput('Realm_Class', 'Realm_Class',
+    #                                     choices = Realm_Class,
+    #                                     multiple = TRUE)
+    # ),
+      # shiny::column(width = 3,
+      #   shiny::selectizeInput('vegPlotQuality', 'Veg Plot Quality',
+      #     choices = vegPlotQuality,
+      #     multiple = TRUE)
+      # ),
+      # shiny::column(width = 3,
+      #   shiny::selectizeInput('soilPlotQuality', 'Soil Plot Quality',
+      #     choices = soilPlotQuality,
+      #     multiple = TRUE)
+      # ),
+      shiny::column(width = 3,
+        shiny::selectizeInput(inputId = 'locationAccuracy',
+          label = 'Location Accuracy', multiple = FALSE,
+          choices = c('', locationAccuracy))
+      )
+    ),
+    # shiny::fluidRow(
+    #   shiny::column(width = 12,
+    #     shiny::checkboxInput(inputId = 'inPublications',
+    #       'Plots used in published classification only?', value = FALSE)
+    #   )
+    # )
       ),
       shiny::actionButton('filterTop', 'Apply', style = 'margin-top: .5rem;')
     ),
